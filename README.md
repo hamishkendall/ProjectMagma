@@ -1,0 +1,3 @@
+# ProjectMagma
+
+DOCUMENT ALL CODE.
