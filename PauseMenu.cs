@@ -7,8 +7,8 @@ public class PauseMenu : MonoBehaviour {
     public static bool isPaused = false;
     public GameObject pauseMenuUI;
 	
+    //This method is run every frame and checks for the userinput of the Escape key.
 	void Update () {
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (isPaused)
@@ -22,6 +22,7 @@ public class PauseMenu : MonoBehaviour {
         }
 	}
 
+    //Sets the Pause Menu to inactive and sets the timescale for the game to 1, to resume normal time.
     void ResumeGame()
     {
         pauseMenuUI.SetActive(false);
@@ -30,6 +31,7 @@ public class PauseMenu : MonoBehaviour {
         Debug.Log("Game was resumed");
     }
 
+    //Sets the Pause Menu UI to active, and sets the timescale for the game to 0, to simulate a pause.
     void PauseGame()
     {
         pauseMenuUI.SetActive(true);
