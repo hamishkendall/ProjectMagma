@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour {
     public List<Item> items;
-    public int space = 20;
+    public int space = 20; // Space of the inventory
 
     #region Singleton 
-
+    //This allows us to access this inventory instance 
     public static Inventory instance;
 
     void Awake()
     {
-        if (instance != null)
+        if (instance != null)// Make sure there is only one inventory at all time
         {
             Debug.LogWarning("More than one stance of inventory found!");
             return;
@@ -21,12 +21,14 @@ public class Inventory : MonoBehaviour {
     }
 
     #endregion
-
+    
     public delegate void OnitemChanged();
-    public OnitemChanged onItemChangedCallback;
+    public OnitemChanged onItemChangedCallback; // trigger this when theres a change in inventory, needed for updating inventory UI
 
+    //Method for adding item into inventory
     public void AddItem(Item item)
     {
+        // Checking if the inventory space is not full
         if(items.Count >= space)
         {
             Debug.Log("no room");
@@ -35,9 +37,9 @@ public class Inventory : MonoBehaviour {
         items.Add(item);
 
         if (onItemChangedCallback != null)
-            onItemChangedCallback.Invoke();
+            onItemChangedCallback.Invoke(); 
     }
-
+    // Method for removing item in inventory but currently not using yet
     public void RemoveItem(Item item)
     {
         items.Remove(item);
