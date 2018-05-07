@@ -7,9 +7,9 @@ class UIManager : MonoBehaviour {
     public PauseMenuUI pauseMenu;
     public StatsUI statsMenu;
     public Image healthBar;
-	
+
     //This method is run every frame. Can be taxing on some computers. Checks for button presses.
-	void Update () {
+    void Update () {
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -37,6 +37,8 @@ class UIManager : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.T))
         {
+
+            //THIS IS PLACEHOLDER IT WILL CALL A METHOD FROM GAME MANAGER.
             pDetails.TakeDmg(1);
             healthBar.fillAmount = pDetails.GetHp();
             Debug.Log(pDetails.curHp / pDetails.maxHp);

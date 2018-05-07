@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour {
     public List<Item> items;
-    public int space = 20;
+    public int space = 20; // Space of the inventory
 
     #region Singleton 
 
@@ -23,11 +23,14 @@ public class Inventory : MonoBehaviour {
     #endregion
 
     public delegate void OnitemChanged();
-    public OnitemChanged onItemChangedCallback;
+    public OnitemChanged onItemChangedCallback; // trigger this when theres a change in inventory, needed for updating inventory UI
 
+
+    //Method for adding item into inventory
     public void AddItem(Item item)
     {
-        if(items.Count >= space)
+        // Checking if the inventory space is not full
+        if (items.Count >= space)
         {
             Debug.Log("no room");
             return;
@@ -38,6 +41,7 @@ public class Inventory : MonoBehaviour {
             onItemChangedCallback.Invoke();
     }
 
+    // Method for removing item in inventory but currently not using yet
     public void RemoveItem(Item item)
     {
         items.Remove(item);

@@ -10,27 +10,35 @@ public class PlayerMovement : MonoBehaviour {
     private Vector2 movement;
     private BoxCollider2D groundCheck;
     public bool centerGrounded, leftGrounded, rightGrounded;
+    private float speedLimit;
 
 
     void Start () {
+        speedLimit = 20f;
         centerGrounded = false; 
         rightGrounded = false; 
         leftGrounded = false;
-        jumpVelocity = 5;
+        jumpVelocity = 12;
         rb = GetComponent<Rigidbody2D>();
         groundCheck = GetComponent<BoxCollider2D>();
-        fallMulitplier = 3f;
-        speed = 0.25f;
+        fallMulitplier = 6f;
+        speed = 2f;
     }
 
     private void FixedUpdate()
     {
+
+        CheckRayCast();
+
         //moving side to side
         if (Input.GetAxisRaw("Horizontal") > 0.5f || Input.GetAxisRaw("Horizontal") < -0.5f)
         {
-            horizontal = Input.GetAxisRaw("Horizontal");
-            movement = new Vector2(horizontal, 0f);
-            rb.velocity += movement * speed;
+            if(rb.velocity.magnitude < speedLimit)
+            {
+                horizontal = Input.GetAxisRaw("Horizontal");
+                movement = new Vector2(horizontal, 0f);
+                rb.velocity += movement * speed;
+            }
         }
 
 
@@ -48,8 +56,6 @@ public class PlayerMovement : MonoBehaviour {
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMulitplier - 1) * Time.deltaTime;
         }
-
-        CheckRayCast();
     }
 
     public void CheckRayCast()
@@ -103,5 +109,4 @@ public class PlayerMovement : MonoBehaviour {
             centerGrounded = false;
         }
     }
-
 }
