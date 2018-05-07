@@ -5,19 +5,22 @@ public class PlayerMovement : MonoBehaviour {
     public float speed;
     public float fallMulitplier;
     public float jumpVelocity;
-    private bool isGrounded;
     private float horizontal;
-    Rigidbody2D rb;
-    Vector2 movement;
+    private Rigidbody2D rb;
+    private Vector2 movement;
+    private BoxCollider2D groundCheck;
+    public bool centerGrounded, leftGrounded, rightGrounded;
 
 
     void Start () {
-
-        isGrounded = true;
+        centerGrounded = false; 
+        rightGrounded = false; 
+        leftGrounded = false;
         jumpVelocity = 5;
         rb = GetComponent<Rigidbody2D>();
+        groundCheck = GetComponent<BoxCollider2D>();
         fallMulitplier = 3f;
-        speed = 15;
+        speed = 0.25f;
     }
 
     private void FixedUpdate()
@@ -25,20 +28,17 @@ public class PlayerMovement : MonoBehaviour {
         //moving side to side
         if (Input.GetAxisRaw("Horizontal") > 0.5f || Input.GetAxisRaw("Horizontal") < -0.5f)
         {
-            //transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime, 0f, 0f));
             horizontal = Input.GetAxisRaw("Horizontal");
             movement = new Vector2(horizontal, 0f);
-            //rb.AddForce(movement, ForceMode2D.Impulse);
-            rb.velocity += movement * speed * Time.deltaTime;
+            rb.velocity += movement * speed;
         }
 
 
         //Ground check and jump
-        if (isGrounded)
+        if (Input.GetButtonDown("Jump"))
         {
-            if (Input.GetButtonDown("Jump"))
+            if (centerGrounded || leftGrounded || rightGrounded)
             {
-                //transform.Translate(new Vector3( 0f, Input.GetAxisRaw("Vertical") * speed * Time.deltaTime, 0f));
                 rb.AddForce(Vector2.up * jumpVelocity, ForceMode2D.Impulse);
             }
         }
@@ -48,25 +48,60 @@ public class PlayerMovement : MonoBehaviour {
         {
             rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMulitplier - 1) * Time.deltaTime;
         }
+
+        CheckRayCast();
     }
 
-    //Checking whether the character model is grounded.
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void CheckRayCast()
     {
-        if (collision.gameObject.tag == "Floor")
+        Vector2 centerRayStart = groundCheck.bounds.center;
+        Vector2 leftRayStart = groundCheck.bounds.center;
+        Vector2 rightRayStart = groundCheck.bounds.center;
+
+        leftRayStart.x -= groundCheck.bounds.extents.x;
+        rightRayStart.x += groundCheck.bounds.extents.x;
+
+        //THIS IS ONLY FOR DEBUGGING
+        //-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        Debug.DrawRay(leftRayStart, Vector2.down, Color.red);//-------------------------------------------------------------------------------
+        Debug.DrawRay(centerRayStart, Vector2.down, Color.cyan);//-------------------------------------------------------------------------------
+        Debug.DrawRay(rightRayStart, Vector2.down, Color.green);//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+
+        if (Physics2D.Raycast(leftRayStart, Vector2.down, (groundCheck.bounds.extents.y + 0.2f)))
         {
-            isGrounded = true;
-            Debug.Log("landed");
+            Debug.Log("is touching ground left");
+            leftGrounded = true;
+        }
+        else
+        {
+            leftGrounded = false;
+        }
+
+
+        if (Physics2D.Raycast(rightRayStart, Vector2.down, (groundCheck.bounds.extents.y + 0.2f)))
+        {
+            Debug.Log("is touching ground right");
+            rightGrounded = true;
+        }
+        else
+        {
+            rightGrounded = false;
+        }
+
+        if (Physics2D.Raycast(centerRayStart, Vector2.down, (groundCheck.bounds.extents.y + 0.2f)))
+        {
+            Debug.Log("is touching ground center");
+            centerGrounded = true;
+        }
+        else
+        {
+            centerGrounded = false;
         }
     }
 
-    //Checking whether the character model is grounded.
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Floor")
-        {
-            isGrounded = false;
-            Debug.Log("left ground");
-        }
-    }
 }
