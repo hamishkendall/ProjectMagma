@@ -6,27 +6,32 @@ public class PlayerMovement : MonoBehaviour {
     public float fallMulitplier;
     public float jumpVelocity;
     private bool isGrounded;
+    private float horizontal;
+    Rigidbody2D rb;
+    Vector2 movement;
 
-    public Rigidbody2D rb;
 
-    //THIS METHOD IS RUN WHEN THE GAME STARTS
     void Start () {
+
         isGrounded = true;
         jumpVelocity = 5;
         rb = GetComponent<Rigidbody2D>();
         fallMulitplier = 3f;
         speed = 15;
     }
-	
-	
-    //THIS METHOD IS RUN EVERY FRAME. E.G IF YOU RUN THE GAME AT 200 FPS, THIS METHOD WILL RUN 200 TIMES PER SECOND.
-	void Update () {
 
+    private void FixedUpdate()
+    {
         //moving side to side
         if (Input.GetAxisRaw("Horizontal") > 0.5f || Input.GetAxisRaw("Horizontal") < -0.5f)
         {
-            transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime, 0f, 0f));
+            //transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal") * speed * Time.deltaTime, 0f, 0f));
+            horizontal = Input.GetAxisRaw("Horizontal");
+            movement = new Vector2(horizontal, 0f);
+            //rb.AddForce(movement, ForceMode2D.Impulse);
+            rb.velocity += movement * speed * Time.deltaTime;
         }
+
 
         //Ground check and jump
         if (isGrounded)
@@ -48,7 +53,7 @@ public class PlayerMovement : MonoBehaviour {
     //Checking whether the character model is grounded.
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.name == "Ground")
+        if (collision.gameObject.tag == "Floor")
         {
             isGrounded = true;
             Debug.Log("landed");
@@ -58,7 +63,7 @@ public class PlayerMovement : MonoBehaviour {
     //Checking whether the character model is grounded.
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.gameObject.name == "Ground")
+        if (collision.gameObject.tag == "Floor")
         {
             isGrounded = false;
             Debug.Log("left ground");

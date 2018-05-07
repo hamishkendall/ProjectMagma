@@ -112,30 +112,30 @@ public class PlayerDetails : MonoBehaviour
     }
 
     //Returns stat value as a String for updating UI
-    public String GetStatPoints(int stat)
+    public int GetStatPoints(int stat)
     {
-        String pts = "";
+        int pts = 0;
 
         switch (stat)
         {
-            case 1: pts = Convert.ToString(pStats.GetStatPoints(StatType.sta));
+            case 1: pts = pStats.GetStatPoints(StatType.sta);
                 break;
 
-            case 2: pts = Convert.ToString(pStats.GetStatPoints(StatType.str));
+            case 2: pts = pStats.GetStatPoints(StatType.str);
                 break;
 
-            case 3: pts = Convert.ToString(pStats.GetStatPoints(StatType.dex));
+            case 3: pts = pStats.GetStatPoints(StatType.dex);
                 break;
 
-            case 4: pts = Convert.ToString(pStats.GetStatPoints(StatType.def));
+            case 4: pts = pStats.GetStatPoints(StatType.def);
                 break;
         }
         return pts;
     }
 
-    public String GetUnallocatedPts()
+    public int GetUnallocatedPts()
     {
-        return Convert.ToString(pStats.unallocatedPts);
+        return pStats.unallocatedPts;
     }
 
     //Adds exp value and calculates level;
